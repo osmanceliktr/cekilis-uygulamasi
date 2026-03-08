@@ -50,18 +50,21 @@ export default function CekilisEkrani({ kisiler }) {
       transition={{ duration: 0.6, ease: "easeInOut" }}
       className="w-screen h-screen flex flex-col items-center justify-center gap-6 p-8"
     >
-      <h1 className="text-4xl font-bold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-        🎰 Çekiliş Devam Ediyor...
-      </h1>
+      {/* Kurumsal Başlık */}
+      <div className="text-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-white tracking-wide">
+          ÖDÜL ÇEKİLİŞİ
+        </h1>
+        <div className="mt-1 h-0.5 w-24 mx-auto bg-gradient-to-r from-transparent via-blue-400 to-transparent" />
+      </div>
 
       <div className="w-full max-w-6xl space-y-6">
         {CEKILIS_KATEGORILERI.map((kategori, ki) => (
           <div key={kategori.id}>
             {/* Kategori başlığı */}
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl">{kategori.ikon}</span>
               <h2
-                className={`text-2xl font-bold transition-opacity duration-300 ${
+                className={`text-xl font-bold tracking-wide transition-opacity duration-300 ${
                   ki === aktifKategoriIndex
                     ? "text-white opacity-100"
                     : ki < aktifKategoriIndex
@@ -72,7 +75,7 @@ export default function CekilisEkrani({ kisiler }) {
                 {kategori.odul}
               </h2>
               {ki < aktifKategoriIndex && (
-                <span className="text-green-400 text-xl">✅</span>
+                <span className="text-xs font-semibold text-emerald-400 tracking-widest">TAMAMLANDI</span>
               )}
             </div>
 

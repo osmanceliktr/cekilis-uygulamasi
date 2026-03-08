@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:50750",
+        target: "https://erzurumihh.org.tr",
         changeOrigin: true,
       },
     },

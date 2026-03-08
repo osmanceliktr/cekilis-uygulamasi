@@ -34,10 +34,9 @@ export default function OdulKarti({
           : undefined
       }
     >
-      {/* Ödül ikonu ve adı */}
+      {/* Ödül adı */}
       <div className="text-center">
-        <span className="text-3xl">{kategori.ikon}</span>
-        <p className="text-xs text-white/50 mt-1 tracking-wider">
+        <p className="text-sm font-medium text-white/60 tracking-wider uppercase">
           {kategori.odul} #{kartIndex + 1}
         </p>
       </div>
@@ -54,7 +53,7 @@ export default function OdulKarti({
 
       {/* Kazanan işareti */}
       {kazanan && !kazananBelirlendi && (
-        <div className="text-green-400 text-lg">✅</div>
+        <div className="text-xs font-semibold text-emerald-400 tracking-widest uppercase">Kazanan</div>
       )}
 
       {/* Konfeti efekti */}

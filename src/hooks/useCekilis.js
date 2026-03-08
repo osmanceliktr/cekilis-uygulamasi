@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { CEKILIS_KATEGORILERI, RULET_INTERVAL } from "../constants/cekilis";
 import { rastgeleEleman } from "../utils/random";
-import { tickSesiCal, kazananSesiCal } from "../utils/ses";
+import { tickSesiCal, kazananSesiCal, sesleriOncdenYukle } from "../utils/ses";
 
 /**
  * Çekiliş mantığını yöneten hook.
@@ -44,6 +44,10 @@ export function useCekilis(kisiler) {
   const birKartCek = useCallback(
     (kategoriId) => {
       return new Promise((resolve) => {
+        // Kazananı önceden belirle — yavaşlama sonunda bu isim gösterilecek
+        const kazanan = rastgeleMusaitIsim();
+        if (!kazanan) { resolve(null); return; }
+
         let sayac = 0;
         const toplamHizliDonme = 20; // ~2 saniye hızlı faz
 
@@ -65,36 +69,33 @@ export function useCekilis(kisiler) {
 
             const yavasla = () => {
               if (i < yavaslamaSureleri.length) {
-                const isim = rastgeleMusaitIsim();
+                // Son adımda kazananın ismini göster — izleyici doğru ismi görür
+                const isim = i === yavaslamaSureleri.length - 1
+                  ? kazanan
+                  : rastgeleMusaitIsim();
                 if (isim) {
                   setRuletIsim(isim);
-                  // Yavaşladıkça pitch düşer — mekanik çark hissi
                   const pitch = 1.0 - i * 0.08;
                   tickSesiCal(Math.max(pitch, 0.5));
                 }
                 setTimeout(yavasla, yavaslamaSureleri[i]);
                 i++;
               } else {
-                // ── Kazanan belirlendi ──
-                const kazanan = rastgeleMusaitIsim();
-                if (kazanan) {
-                  kullanilmislar.current.add(kazanan);
-                  setRuletIsim(kazanan);
-                  setKazananlar((prev) => ({
-                    ...prev,
-                    [kategoriId]: [...prev[kategoriId], kazanan],
-                  }));
-                  setKazananBelirlendi(true);
-                  kazananSesiCal();
+                // ── Kazanan sabitleniyor (son gösterilen isimle aynı) ──
+                kullanilmislar.current.add(kazanan);
+                setRuletIsim(kazanan);
+                setKazananlar((prev) => ({
+                  ...prev,
+                  [kategoriId]: [...prev[kategoriId], kazanan],
+                }));
+                setKazananBelirlendi(true);
+                kazananSesiCal();
 
-                  // Kutlama süresi sonrası devam
-                  setTimeout(() => {
-                    setKazananBelirlendi(false);
-                    resolve(kazanan);
-                  }, 3000);
-                } else {
-                  resolve(null);
-                }
+                // Kutlama süresi sonrası devam
+                setTimeout(() => {
+                  setKazananBelirlendi(false);
+                  resolve(kazanan);
+                }, 3000);
               }
             };
 
@@ -108,6 +109,7 @@ export function useCekilis(kisiler) {
 
   /** Tüm çekilişi sırayla başlatır */
   const cekilisiBaslat = useCallback(async () => {
+    sesleriOncdenYukle();
     setBasladi(true);
 
     for (let ki = 0; ki < CEKILIS_KATEGORILERI.length; ki++) {

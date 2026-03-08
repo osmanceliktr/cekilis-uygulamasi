@@ -9,7 +9,7 @@ function App() {
   const { kisiler, yukleniyor } = useKisiListesi();
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white font-sans overflow-hidden">
+    <div className="min-h-screen bg-[#0b1120] text-white font-sans overflow-hidden">
       <AnimatePresence mode="wait">
         {ekran === "bekleme" ? (
           <BeklemeEkrani
